@@ -1,7 +1,28 @@
+import { useState } from "react";
+
 export function Login() {
+    const [errors, setErrors] = useState<string[]>([]);
+
+    const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const data = new FormData(e.target as HTMLFormElement);
+
+        fetch("http://127.0.0.1:3000/users/tokens/sign_in", {
+            method: "POST",
+            body: data
+        })
+            .then(res => res.json())
+            .then(data => {
+                if(data.error_description) {
+                    setErrors(data.error_description as string[])
+                }
+            })
+    }
+
     return (
         <section className="section w-full h-full flex justify-center items-center">
-            <form className="flex flex-col gap-12 bg-blue-950 bg-opacity-50 p-6 pt-12 pb-12 rounded-lg">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-12 bg-blue-950 bg-opacity-50 p-6 pt-12 pb-12 rounded-lg">
                 <input
                     className="outline-0 transition-colors focus:border-b-blue-700 bg-gray-900 text-white p-2 text-lg border-b-2 border-b-blue-800"
                     placeholder="Email address"
@@ -20,6 +41,11 @@ export function Login() {
                 >
                     Log In
                 </button>
+                {
+                    errors.map(item => (
+                        <p className="text-red-500 font-medium text-lg">{ item }</p>
+                    ))
+                }
             </form>
         </section>
     )
