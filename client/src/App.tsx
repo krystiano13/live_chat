@@ -1,10 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        const formData = new FormData();
+        formData.append("email", "test@example.com");
+        formData.append("password", "password");
+
+        fetch("http://127.0.0.1:3000/users/tokens/sign_in", {
+            method: "POST",
+            body: formData
+        })
+            .then(res => res.json())
+            .then(data => console.log(data))
+    }, []);
 
   return (
     <>
