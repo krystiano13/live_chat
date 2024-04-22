@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 interface Props {
     loggedIn: boolean,
@@ -8,12 +9,41 @@ interface Props {
 }
 
 export const Navbar:React.FC<Props> = ({ loggedIn, setOwner, setAccessToken, setLoggedIn }) => {
+    const navigate = useNavigate();
     const logout = () => {
         setAccessToken("");
         setOwner("");
         setLoggedIn(false);
         localStorage.removeItem("refresh_token");
     }
+
+    const auth = () => {
+        if(!localStorage.getItem("refresh_token")) {
+            setAccessToken("");
+            setOwner("");
+            setLoggedIn(false);
+            localStorage.removeItem("refresh_token");
+            return;
+        }
+        fetch("http://127.0.0.1:3000/users/tokens/refresh", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("refresh_token") as string}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if(!data.error) {
+                    setLoggedIn(true);
+                    setAccessToken(data.token);
+                    setOwner(data.resource_owner.email);
+                    localStorage.setItem("refresh_token", data.refresh_token);
+                    navigate("/");
+                }
+            })
+    }
+
+    useEffect(auth, []);
 
     return (
         <nav className="fixed p-5" >
