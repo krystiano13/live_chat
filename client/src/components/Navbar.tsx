@@ -1,10 +1,20 @@
 import { NavLink } from "react-router-dom";
 
 interface Props {
-    loggedIn: boolean
+    loggedIn: boolean,
+    setOwner: (owner:string) => void,
+    setAccessToken: (token:string) => void,
+    setLoggedIn: (value:boolean) => void
 }
 
-export const Navbar:React.FC<Props> = ({ loggedIn }) => {
+export const Navbar:React.FC<Props> = ({ loggedIn, setOwner, setAccessToken, setLoggedIn }) => {
+    const logout = () => {
+        setAccessToken("");
+        setOwner("");
+        setLoggedIn(false);
+        localStorage.removeItem("refresh_token");
+    }
+
     return (
         <nav className="fixed p-5" >
             <section id="navigation" className="relative flex gap-5 items-center justify-start">
@@ -23,7 +33,7 @@ export const Navbar:React.FC<Props> = ({ loggedIn }) => {
                 }
                 {
                     loggedIn &&
-                    <NavLink className="text-white font-medium text-lg" to="/logout">Log Out</NavLink>
+                    <button onClick={logout} className="text-white font-medium text-lg">Log Out</button>
                 }
             </section>
         </nav>
