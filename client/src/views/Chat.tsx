@@ -1,14 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
     loggedIn: boolean,
-    accessToken: string
+    accessToken: string,
+    owner: string
 }
 
-export const Chat:React.FC<Props> = ({ loggedIn, accessToken }) => {
+const socketURL:string = "ws://127.0.0.1:3000/cable";
+const socket = new WebSocket(socketURL);
+
+export const Chat:React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState<string[]>([]);
+    const [guid, setGuid] = useState("");
+
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    socket.onopen = function(event) {
+        console.log("Connected to websocket server");
+
+        const msg = JSON.stringify({
+            command: "subscribe",
+            identifier: JSON.stringify({
+              id: Math.random().toString(36).substring(2,15),
+              channel: "MessagesChannel",
+            }),
+        })
+
+        socket.send(msg);
+    }
+
+    socket.onmessage = function(event) {   
+        const data = JSON.parse(event.data);
+        const message = data.message;  
+
+        if(typeof message === "object") {
+            setMessages(message.messages)
+        }
+    }
+
+    socket.onerror = (err) => console.log(err)
 
     function sendMessage(user:string, text:string) {
         if(accessToken) {
@@ -20,7 +52,8 @@ export const Chat:React.FC<Props> = ({ loggedIn, accessToken }) => {
                 },
                 body: JSON.stringify({ message: { user: user, text: text } })
             })
-            .then(res => res.json())         
+            .then(res => res.json())    
+            .then(data => data)     
             }
     }
 
@@ -34,31 +67,23 @@ export const Chat:React.FC<Props> = ({ loggedIn, accessToken }) => {
             })
             .then(res => res.json())
             .then(data => {
-                setMessages(data.messages);
+                setMessages([...data.messages]);
                 return data;
             })
         }
     }
 
-    function createSocket() {
-        const socketURL:string = "ws://localhost:3000/cable";
-        const socket = new WebSocket(socketURL);
+    function handleSubmit(e:React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
 
-        socket.onopen = function(event) {
-            const msg = {
-                command: "subscribe",
-                identifier: JSON.stringify({ 
-                    id: 1,
-                    channel: "messages_channel"
-                })
-            }
-            socket.send(JSON.stringify(msg));
-        }
+        const formData = new FormData(e.target as HTMLFormElement);
+        const text = formData.get("text") as string;
 
-        socket.onmessage = function(event) {     
-            if(event.data.message) {
-                getMessages();
-            }
+        sendMessage(owner,text);
+        getMessages();
+        
+        if(inputRef.current) {
+            inputRef.current.value = "";
         }
     }
 
@@ -66,8 +91,27 @@ export const Chat:React.FC<Props> = ({ loggedIn, accessToken }) => {
         if(!loggedIn) {
             navigate("/login");
         }
-        createSocket();
     }, [loggedIn]);
 
-    return <></>
+    useEffect(() => {
+        getMessages();
+    }, []);
+
+    return (
+        <section className="w-full h-full flex justify-center items-center">
+            <div className="flex flex-col justify-between">
+                <div className="w-[90vw] md:w-[45rem] min-h-[30rem] bg-slate-600 bg-opacity-25 rounded-t-lg">
+                    {
+                        messages.map(item => (
+                            <p className="text-white font-normal text-lg">{ item.text }</p>
+                        ))
+                    }
+                </div>
+                <form onSubmit={handleSubmit} className="w-full bg-slate-700 bg-opacity-25 h-[5rem] flex items-center justify-center">
+                    <input ref={inputRef} name="text" placeholder="Your message ..." />
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </section>
+    )
 }

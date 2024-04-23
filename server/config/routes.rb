@@ -11,4 +11,6 @@ Rails.application.routes.draw do
 
   get "all", to: "message#index", as: :message_all
   post "create", to: "message#create", as: :message_create
+
+  mount ActionCable.server => '/cable'
 end

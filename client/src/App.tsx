@@ -19,7 +19,7 @@ function App() {
             <BrowserRouter>
                 <Navbar accessToken={accessToken} setLoggedIn={(value:boolean) => setLoggedIn(value)} setOwner={(owner:string) => setOwner(owner)}  setAccessToken={(token:string) => setAccessToken(token)} loggedIn={loggedIn} />
                 <Routes>
-                    <Route path="/" element={<Chat accessToken={accessToken} loggedIn={loggedIn} />}></Route>
+                    <Route path="/" element={<Chat owner={owner} accessToken={accessToken} loggedIn={loggedIn} />}></Route>
                     <Route path="/login" element={<Login setLoggedIn={(value:boolean) => setLoggedIn(value)} setOwner={(owner:string) => setOwner(owner)}  setAccessToken={(token:string) => setAccessToken(token)} />} />
                     <Route path="/register" element={<Register setLoggedIn={(value:boolean) => setLoggedIn(value)} setOwner={(owner:string) => setOwner(owner)}  setAccessToken={(token:string) => setAccessToken(token)} />} />
                 </Routes>

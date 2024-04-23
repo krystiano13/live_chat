@@ -12,9 +12,6 @@ class MessageController < ApplicationController
     def create
         @message = Message.new(get_message_params)
         if @message.save!
-            @messages = Message.all
-            ActionCable.server.broadcast "messages_channel", { :messages => @messages }
-
             render json: {
                 :message => "Message Saved"
             }, status: :ok
