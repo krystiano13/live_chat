@@ -15,7 +15,7 @@ function App() {
     const [owner, setOwner] = useState<string>("");
 
     useEffect(() => {
-        if(accessToken) {
+        if(false) {
             console.log(accessToken);
 
             fetch('http://127.0.0.1:3000/all', {
