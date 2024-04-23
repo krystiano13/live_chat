@@ -5,11 +5,13 @@ interface Props {
     loggedIn: boolean,
     setOwner: (owner:string) => void,
     setAccessToken: (token:string) => void,
-    setLoggedIn: (value:boolean) => void
+    setLoggedIn: (value:boolean) => void,
+    accessToken: string
 }
 
-export const Navbar:React.FC<Props> = ({ loggedIn, setOwner, setAccessToken, setLoggedIn }) => {
+export const Navbar:React.FC<Props> = ({ loggedIn, setOwner, setAccessToken, accessToken, setLoggedIn }) => {
     const navigate = useNavigate();
+
     const logout = () => {
         setAccessToken("");
         setOwner("");

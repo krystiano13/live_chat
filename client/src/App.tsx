@@ -14,10 +14,27 @@ function App() {
     const [accessToken, setAccessToken] = useState<string>("");
     const [owner, setOwner] = useState<string>("");
 
+    useEffect(() => {
+        if(accessToken) {
+            console.log(accessToken);
+
+            fetch('http://127.0.0.1:3000/all', {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+            })
+        }
+    }, [accessToken]);
+
     return (
         <main className="w-[100vw] h-[100vh] bg-gray-800 flex flex-col">
             <BrowserRouter>
-                <Navbar setLoggedIn={(value:boolean) => setLoggedIn(value)} setOwner={(owner:string) => setOwner(owner)}  setAccessToken={(token:string) => setAccessToken(token)} loggedIn={loggedIn} />
+                <Navbar accessToken={accessToken} setLoggedIn={(value:boolean) => setLoggedIn(value)} setOwner={(owner:string) => setOwner(owner)}  setAccessToken={(token:string) => setAccessToken(token)} loggedIn={loggedIn} />
                 <Routes>
                     <Route path="/" element={<Chat loggedIn={loggedIn} />} /><Route path="/" element={<Chat loggedIn={loggedIn} />} />
                     <Route path="/login" element={<Login setLoggedIn={(value:boolean) => setLoggedIn(value)} setOwner={(owner:string) => setOwner(owner)}  setAccessToken={(token:string) => setAccessToken(token)} />} />
