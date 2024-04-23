@@ -10,4 +10,5 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   get "all", to: "message#index", as: :message_all
+  post "create", to: "message#create", as: :message_create
 end

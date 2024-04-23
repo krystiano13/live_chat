@@ -28,7 +28,20 @@ function App() {
             .then(data => {
                 console.log(data)
             })
+
+
+        fetch('http://127.0.0.1:3000/create', {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/JSON"
+            },
+            body: JSON.stringify({ message: { user: 'test@example.com', text: "Hello World !" } })
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
         }
+
     }, [accessToken]);
 
     return (

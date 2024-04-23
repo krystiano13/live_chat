@@ -10,6 +10,20 @@ class MessageController < ApplicationController
     end
 
     def create
+        @message = Message.new(get_message_params)
+        if @message.save!
+            render json: {
+                :message => "Message Saved"
+            }, status: :ok
+        else
+            render json: {
+                :error => "Message was not saved"
+            }, status: :unprocessable_entity
+        end
+    end
 
+    private
+    def get_message_params
+        return params.require(:message).permit(:user, :text)
     end
 end
