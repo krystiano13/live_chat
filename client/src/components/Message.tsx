@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface Props {
   index: number;
@@ -10,9 +10,30 @@ interface Props {
 export function Message({ user, text, owner, index }: Props) {
   const [editMode, setEditMode] = useState<boolean>(false);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   function toggleEditMode() {
     setEditMode((prev) => !prev);
   }
+
+  function update(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!inputRef.current) return;
+
+    fetch(
+      `http://127.0.0.1:3000/update/${index}?text=${inputRef.current.value}`,
+      {
+        method: "PUT",
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setEditMode(false);
+      });
+  }
+
+  function destroy() {}
 
   return (
     <>
@@ -33,12 +54,20 @@ export function Message({ user, text, owner, index }: Props) {
           </div>
           {editMode && (
             <>
-              <form>
-                <input placeholder="Your message ..." name="text" type="text" />
+              <form onSubmit={update}>
+                <input
+                  defaultValue={text}
+                  ref={inputRef}
+                  placeholder="Your message ..."
+                  name="text"
+                  type="text"
+                />
                 <button type="submit">Update</button>
               </form>
-              <form>
-                <button onClick={toggleEditMode} type="button">Cancel</button>
+              <form onSubmit={destroy}>
+                <button onClick={toggleEditMode} type="button">
+                  Cancel
+                </button>
                 <button type="submit">Delete</button>
               </form>
             </>

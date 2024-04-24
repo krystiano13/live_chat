@@ -24,7 +24,10 @@ class MessageController < ApplicationController
 
     def update
         @message = Message.find(params[:id])
-        if @message.update(get_message_params)
+        if @message.present?
+            @message.update(text: params[:text])
+            messages = Message.all
+            ActionCable.server.broadcast("messages_channel", { :messages => messages })
             render json: {
                 :message => "Message Updated"
             }, status: :ok
