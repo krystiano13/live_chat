@@ -41,6 +41,8 @@ export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
     const data = JSON.parse(event.data);
     const message = data.message;
 
+    console.log(data);
+
     if (typeof message === "object") {
       setMessages(message.messages);
     }
