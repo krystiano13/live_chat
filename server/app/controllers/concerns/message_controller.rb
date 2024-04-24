@@ -22,6 +22,32 @@ class MessageController < ApplicationController
         end
     end
 
+    def update
+        @message = Message.find(params[:id])
+        if @message.update(get_message_params)
+            render json: {
+                :message => "Message Updated"
+            }, status: :ok
+        else
+            render json: {
+                :error => "Message was not updated"
+            }, status: :unprocessable_entity
+        end
+    end
+
+    def destroy
+        @message = Message.find(params[:id])
+        if @message.destroy
+            render json: {
+                :message => "Message Deleted"
+            }, status: :ok
+        else
+            render json: {
+                :error => "Message was not deleted"
+            }, status: :unprocessable_entity
+        end
+    end
+
     private
     def get_message_params
         return params.require(:message).permit(:user, :text)

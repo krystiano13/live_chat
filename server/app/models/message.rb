@@ -4,6 +4,7 @@ class Message < ApplicationRecord
   validates :text, presence: true
   validates :user, presence: true
 
+  private
   def broadcast_messages
     messages = Message.all
     ActionCable.server.broadcast("messages_channel", { :messages => messages })

@@ -9,6 +9,7 @@ interface Props {
 }
 
 interface Message {
+  id: number;
   user: string;
   text: string;
 }
@@ -120,7 +121,7 @@ export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
         >
           {messages.map((item) => (
             <>
-              <Message user={item.user} text={item.text} owner={owner} />
+              <Message index={item.id} user={item.user} text={item.text} owner={owner} />
             </>
           ))}
         </div>
