@@ -7,12 +7,17 @@ interface Props {
   owner: string;
 }
 
+interface Message {
+  user: string;
+  text: string;
+}
+
 const socketURL: string = "ws://127.0.0.1:3000/cable";
 const socket = new WebSocket(socketURL);
 
 export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -99,9 +104,26 @@ export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
   return (
     <section className="w-full h-full flex justify-center items-center">
       <div className="flex flex-col justify-between">
-        <div className="w-[90vw] md:w-[45rem] min-h-[30rem] bg-slate-600 bg-opacity-25 rounded-t-lg">
+        <div className="w-[90vw] md:w-[45rem] p-5 min-h-[30rem] bg-slate-600 bg-opacity-25 rounded-t-lg">
           {messages.map((item) => (
-            <p className="text-white font-normal text-lg">{item.text}</p>
+            <>
+              {item.user !== owner ? (
+                <div className="w-full flex flex-col items-start gap-1">
+                  <p className="text-sm md:text-xs text-slate-300">
+                    {item.user}
+                  </p>
+                  <div className="text-white p-2 max-w-[75%] rounded-lg bg-slate-700 font-normal text-sm md:text-base">
+                    {item.text}
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full flex flex-col items-end gap-1">
+                  <div className="text-white p-2 max-w-[75%] rounded-lg bg-blue-700 font-normal text-sm md:text-base">
+                    {item.text}
+                  </div>
+                </div>
+              )}
+            </>
           ))}
         </div>
         <form
