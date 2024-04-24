@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   get "all", to: "message#index", as: :message_all
   post "create", to: "message#create", as: :message_create
   put "update/:id", to: "message#update", as: :message_update
-  delete "destroy", to: "message#destroy", as: :message_destroy
+  delete "destroy/:id", to: "message#destroy", as: :message_destroy
 
   mount ActionCable.server => '/cable'
 end

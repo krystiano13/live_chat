@@ -27,13 +27,21 @@ export function Message({ user, text, owner, index }: Props) {
       }
     )
       .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
+      .then(() => {
         setEditMode(false);
       });
   }
 
-  function destroy() {}
+  function destroy(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    fetch(`http://127.0.0.1:3000/destroy/${index}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setEditMode(false);
+      });
+  }
 
   return (
     <>

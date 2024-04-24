@@ -41,6 +41,8 @@ class MessageController < ApplicationController
     def destroy
         @message = Message.find(params[:id])
         if @message.destroy
+            messages = Message.all
+            ActionCable.server.broadcast("messages_channel", { :messages => messages })
             render json: {
                 :message => "Message Deleted"
             }, status: :ok
