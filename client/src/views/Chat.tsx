@@ -111,6 +111,7 @@ export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
     <section className="w-full h-full flex justify-center items-center">
       <div className="flex flex-col justify-between">
         <div
+          id="messages"
           ref={messagesRef}
           className="w-[90vw] md:w-[45rem] overflow-y-auto p-5 h-[30rem] bg-slate-600 bg-opacity-25 rounded-t-lg"
         >
