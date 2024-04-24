@@ -9,4 +9,5 @@ class Message < ApplicationRecord
         messages = Message.all
         ActionCable.server.broadcast("messages_channel", { :messages => messages })
     end
+
 end
