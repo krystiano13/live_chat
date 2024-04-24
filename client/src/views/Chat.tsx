@@ -20,6 +20,7 @@ export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
 
   socket.onopen = function () {
     console.log("Connected to websocket server");
@@ -101,24 +102,32 @@ export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
     getMessages();
   }, []);
 
+  useEffect(() => {
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
+  }, [messages]);
   return (
     <section className="w-full h-full flex justify-center items-center">
       <div className="flex flex-col justify-between">
-        <div className="w-[90vw] md:w-[45rem] p-5 min-h-[30rem] bg-slate-600 bg-opacity-25 rounded-t-lg">
+        <div
+          ref={messagesRef}
+          className="w-[90vw] md:w-[45rem] overflow-y-auto p-5 h-[30rem] bg-slate-600 bg-opacity-25 rounded-t-lg"
+        >
           {messages.map((item) => (
             <>
               {item.user !== owner ? (
-                <div className="w-full flex flex-col items-start gap-1">
+                <div className="w-full flex flex-col items-start mt-2 gap-1">
                   <p className="text-sm md:text-xs text-slate-300">
                     {item.user}
                   </p>
-                  <div className="text-white p-2 max-w-[75%] rounded-lg bg-slate-700 font-normal text-sm md:text-base">
+                  <div className="text-white p-2 break-words max-w-[75%] rounded-lg bg-slate-700 font-normal text-sm md:text-base">
                     {item.text}
                   </div>
                 </div>
               ) : (
-                <div className="w-full flex flex-col items-end gap-1">
-                  <div className="text-white p-2 max-w-[75%] rounded-lg bg-blue-700 font-normal text-sm md:text-base">
+                <div className="w-full flex flex-col items-end gap-1 mt-2">
+                  <div className="text-white break-words p-2 max-w-[75%] rounded-lg bg-blue-700 font-normal text-sm md:text-base">
                     {item.text}
                   </div>
                 </div>
