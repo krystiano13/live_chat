@@ -54,12 +54,14 @@ export const AuthForm:React.FC<Props> = ({ mode , setOwner, setLoggedIn, setAcce
                 placeholder="Email address"
                 name="email"
                 type="text"
+                required
             />
             <input
                 className="outline-0 transition-colors focus:border-b-blue-700 bg-gray-900 text-white p-2 text-lg border-b-2 border-b-blue-800"
                 placeholder="Password"
                 name="password"
                 type="password"
+                required
             />
             {
                 mode === "register" &&
@@ -68,6 +70,7 @@ export const AuthForm:React.FC<Props> = ({ mode , setOwner, setLoggedIn, setAcce
                     placeholder="Confirm password"
                     name="password_confirmation"
                     type="password"
+                    required
                 />
             }
             <button
