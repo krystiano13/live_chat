@@ -24,32 +24,38 @@ export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
 
-  socket.onopen = function () {
-    console.log("Connected to websocket server");
+  useEffect(() => {
+    socket.onopen = function () {
+      console.log("Connected to websocket server");
+  
+      const msg = JSON.stringify({
+        command: "subscribe",
+        identifier: JSON.stringify({
+          id: Math.random().toString(36).substring(2, 15),
+          channel: "MessagesChannel",
+        }),
+      });
+  
+      socket.send(msg);
+    };
+  
+    socket.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      const message = data.message;
+  
+      console.log(data);
+  
+      if (typeof message === "object") {
+        setMessages(message.messages);
+      }
+    };
+  
+    socket.onerror = (err) => console.log(err);
 
-    const msg = JSON.stringify({
-      command: "subscribe",
-      identifier: JSON.stringify({
-        id: Math.random().toString(36).substring(2, 15),
-        channel: "MessagesChannel",
-      }),
-    });
-
-    socket.send(msg);
-  };
-
-  socket.onmessage = function (event) {
-    const data = JSON.parse(event.data);
-    const message = data.message;
-
-    console.log(data);
-
-    if (typeof message === "object") {
-      setMessages(message.messages);
+    return () => {
+      socket.close();
     }
-  };
-
-  socket.onerror = (err) => console.log(err);
+  }, [])
 
   function sendMessage(user: string, text: string) {
     if (accessToken) {
