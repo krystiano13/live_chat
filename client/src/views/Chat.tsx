@@ -59,7 +59,7 @@ export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
 
   function sendMessage(user: string, text: string) {
     if (accessToken) {
-      fetch("http://127.0.0.1:3000/create", {
+      fetch("http://127.0.0.1:3000/api/message", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -74,7 +74,7 @@ export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
 
   function getMessages() {
     if (accessToken) {
-      fetch("http://127.0.0.1:3000/all", {
+      fetch("http://127.0.0.1:3000/api/message", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,

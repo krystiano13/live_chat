@@ -9,10 +9,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  get "all", to: "message#index", as: :message_all
-  post "create", to: "message#create", as: :message_create
-  put "update/:id", to: "message#update", as: :message_update
-  delete "destroy/:id", to: "message#destroy", as: :message_destroy
+  get "api/message", to: "message#index", as: :message_all
+  post "api/message", to: "message#create", as: :message_create
+  put "api/message/:id", to: "message#update", as: :message_update
+  delete "api/message/:id", to: "message#destroy", as: :message_destroy
 
   mount ActionCable.server => '/cable'
 end

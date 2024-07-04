@@ -22,7 +22,7 @@ export function Message({ user, text, owner, index }: Props) {
     if (!inputRef.current) return;
 
     fetch(
-      `http://127.0.0.1:3000/update/${index}?text=${inputRef.current.value}`,
+      `http://127.0.0.1:3000/api/message/${index}?text=${inputRef.current.value}`,
       {
         method: "PUT",
       }
@@ -35,7 +35,7 @@ export function Message({ user, text, owner, index }: Props) {
 
   function destroy(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    fetch(`http://127.0.0.1:3000/destroy/${index}`, {
+    fetch(`http://127.0.0.1:3000/api/message/${index}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
