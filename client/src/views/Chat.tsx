@@ -14,8 +14,6 @@ interface Message {
   text: string;
 }
 
-
-
 export const Chat: React.FC<Props> = ({ loggedIn, accessToken, owner }) => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);

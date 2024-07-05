@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from 'framer-motion';
 
 interface Props {
     mode: "register"|"login",
@@ -47,8 +48,14 @@ export const AuthForm:React.FC<Props> = ({ mode , setOwner, setLoggedIn, setAcce
     }
 
     return (
-        <form id="auth" onSubmit={handleSubmit}
-              className="w-[95vw] md:w-96 flex flex-col gap-12 bg-blue-950 bg-opacity-50 p-6 pt-12 pb-12 rounded-lg">
+        <motion.form 
+              initial={{ scale: 0, opacity: 0 }}
+              transition={{ bounce: 0.5, type: "spring", duration: .5 }}
+              animate={{ scale: [0 , 1], opacity: [0, 1] }}
+              id="auth" 
+              onSubmit={handleSubmit}
+              className="w-[95vw] md:w-96 flex flex-col gap-12 bg-blue-950 bg-opacity-50 p-6 pt-12 pb-12 rounded-lg"
+            >
             <input
                 className="outline-0 transition-colors focus:border-b-blue-700 bg-gray-900 text-white p-2 text-lg border-b-2 border-b-blue-800"
                 placeholder="Email address"
@@ -84,6 +91,6 @@ export const AuthForm:React.FC<Props> = ({ mode , setOwner, setLoggedIn, setAcce
                     <p className="text-red-500 font-medium text-lg">{item}</p>
                 ))
             }
-        </form>
+        </motion.form>
     )
 }
