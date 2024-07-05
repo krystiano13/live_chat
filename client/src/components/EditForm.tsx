@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 interface Props {
     text: string;
     index: number;
@@ -9,7 +11,10 @@ interface Props {
 
 export const EditForm:React.FC<Props> = ({ text, index, update, destroy, inputRef, toggleEditMode }) => {
     return (
-      <div className="bg-slate-700 p-3 rounded-lg mt-1 flex flex-col gap-1 w-[80vw] md:w-auto">
+      <motion.div 
+        className="bg-slate-700 overflow-hidden p-3 rounded-lg mt-1 flex flex-col gap-1 w-[80vw] md:w-auto"
+        animate={{ scale: [0,1], opacity: [0,1] }}
+      >
         <form
           className="flex flex-col md:flex-row gap-1 items-center"
           onSubmit={update}
@@ -47,6 +52,6 @@ export const EditForm:React.FC<Props> = ({ text, index, update, destroy, inputRe
             Delete
           </button>
         </form>
-      </div>
+      </motion.div>
     );
 }

@@ -62,7 +62,7 @@ export function Message({ user, text, owner, index }: Props) {
         </div>
       ) : (
         <div 
-          className="w-full flex flex-col items-end gap-1 mt-2 overflow-x-hidden"
+          className="w-full flex flex-col items-end gap-1 mt-2 overflow-hidden"
         >
           <motion.div
             transition={{ bounce:0, type: "spring", duration: .5 }}
